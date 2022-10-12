@@ -2,6 +2,14 @@ import numpy as np
 from Variable import Variable
 from Function import Function
 
+#입력이 스칼라인 경우 ndarray 인스턴스로 변환해 주는 함수
+def as_array(x):
+    if np.isscaler(x): #스칼라 타입인지 확인해주는 함수
+        return np.array(x)
+    return x 
+
+
+
 class Exp(Function):
     def forward(self,x):
         y = np.exp(x)
