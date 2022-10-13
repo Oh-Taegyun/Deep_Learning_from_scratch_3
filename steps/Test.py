@@ -1,16 +1,12 @@
 import numpy as np
 from Variable import *
 from utility import *
+from Function import *
 
-A = Square()
-B = Exp()
-C = Square()
 
-x = Variable(np.array(0.5))
-a = A(x)
-b = B(a)
-y = C(b)
+Config.enable_backprop = True
+x = Variable(np.ones((100,100,100)))
+y = square(square(square(x)))
+a = y.backward()
 
-y.grad = np.array(1.0)
-y.backward()
-print(x.grad)
+print(a)

@@ -1,3 +1,4 @@
+from turtle import forward
 import numpy as np
 from Variable import Variable
 from Function import Function
@@ -27,14 +28,25 @@ class Square(Function):
         return y
 
     def backward(self, gy):
-        x = self.input.data
+        x = self.inputs[0].data #가변 인자 함수로 입력값이 튜플로 인식되었기 때문에 inputs[0]이다.
         gx = 2*x*gy
         return gx
 
+class Add(Function):
+    def forward(self, x0, x1):
+        y = x0 + x1
+        return y
 
-    # 이 밑으로는 파이썬 함수로 변환
-    def square(x):
-        return Square()(x)
+    def backward(self, gy):
+        return gy, gy
 
-    def exp(x):
-        return Exp()(x)
+
+# 이 밑으로는 파이썬 함수로 변환
+def square(x):
+    return Square()(x)
+
+def exp(x):
+    return Exp()(x)
+
+def add(x0,x1):
+    return Add()(x0,x1)
