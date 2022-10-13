@@ -1,39 +1,39 @@
 '''
 Variable ver.1
-Ãâ·Â°ú ÀÔ·ÂÀÌ °¢°¢ 1°³¶ó´Â °¡Á¤ÀÌ¾ú´Ù
+ì¶œë ¥ê³¼ ì…ë ¥ì´ ê°ê° 1ê°œë¼ëŠ” ê°€ì •ì´ì—ˆë‹¤
 
 class Variable:
     def __init__(self, data):
-        if data is not None: #ndarray¸¸ Ãë±ŞÇÏ°Ô²û ¼³Á¤
+        if data is not None: #ndarrayë§Œ ì·¨ê¸‰í•˜ê²Œë” ì„¤ì •
             if not isinstance(data, np.ndarray):
-                raise TypeError('{}Àº(´Â) Áö¿øÇÏÁö ¾Ê½À´Ï´Ù.'.format(type(data)))
-        
-        self.data = data # µ¥ÀÌÅÍ ÀúÀå 
-        self.grad = None # ±â¿ï±â ÀúÀå
-        self.creator = None # ÀÌ º¯¼ö¸¦ ÀúÀåÇÑ Ã¢Á¶ÀÚ¸¦ ÀúÀå
+                raise TypeError('{}ì€(ëŠ”) ì§€ì›í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.'.format(type(data)))
+
+        self.data = data # ë°ì´í„° ì €ì¥
+        self.grad = None # ê¸°ìš¸ê¸° ì €ì¥
+        self.creator = None # ì´ ë³€ìˆ˜ë¥¼ ì €ì¥í•œ ì°½ì¡°ìë¥¼ ì €ì¥
 
     def set_creator(self, func):
         self.creator = func
 
     def backward(self):
         if self.grad is None:
-            # data¿Í Çü»ó°ú µ¥ÀÌÅÍ Å¸ÀÔÀÌ °°Àº ndarray ÀÎ½ºÅÏ½º¸¦ »ı¼ºÇÏ´Âµ¥, ¸ğµç ¿ä¼Ò¸¦ 1·Î Ã¤¿ö¼­ µ¹·ÁÁİ´Ï´Ù. ¿ªÀüÆÄ¶§ 1À» ÀÔ·ÂÇÏ´Â°ÍÀ» »ı·«ÇÏ±â À§ÇÔ
-            self.grad = np.ones_like(self.data) 
-            
+            # dataì™€ í˜•ìƒê³¼ ë°ì´í„° íƒ€ì…ì´ ê°™ì€ ndarray ì¸ìŠ¤í„´ìŠ¤ë¥¼ ìƒì„±í•˜ëŠ”ë°, ëª¨ë“  ìš”ì†Œë¥¼ 1ë¡œ ì±„ì›Œì„œ ëŒë ¤ì¤ë‹ˆë‹¤. ì—­ì „íŒŒë•Œ 1ì„ ì…ë ¥í•˜ëŠ”ê²ƒì„ ìƒëµí•˜ê¸° ìœ„í•¨
+            self.grad = np.ones_like(self.data)
+
         funcs = [self.creator]
         while funcs:
-            f = funcs.pop() # ÇÔ¼ö¸¦ ²¨³¿
-            x, y = f.input, f.output 
-            x.grad = f.backward(y.grad) # ±â¿ï±â ÀúÀå
+            f = funcs.pop() # í•¨ìˆ˜ë¥¼ êº¼ëƒ„
+            x, y = f.input, f.output
+            x.grad = f.backward(y.grad) # ê¸°ìš¸ê¸° ì €ì¥
 
             if x.creator is not None:
-                funcs.append(x.creator) 
+                funcs.append(x.creator)
 
 '''
 
 '''
 Function ver.1
-Ãâ·Â°ú ÀÔ·ÂÀÌ °¢°¢ 1°³¶ó´Â °¡Á¤ÀÌ¾ú´Ù
+ì¶œë ¥ê³¼ ì…ë ¥ì´ ê°ê° 1ê°œë¼ëŠ” ê°€ì •ì´ì—ˆë‹¤
 
 class Function:
     def __call__(self,input):
@@ -42,7 +42,7 @@ class Function:
         output = Variable(as_array(y))
         output.set_creator(self)
 
-        self.input = input # ÀÔ·Â º¯¼ö¸¦ ±â¾ïÇÔ
+        self.input = input # ì…ë ¥ ë³€ìˆ˜ë¥¼ ê¸°ì–µí•¨
         self.output = output
         return output
 

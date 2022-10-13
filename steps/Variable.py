@@ -2,22 +2,22 @@ import numpy as np
 
 class Variable:
     def __init__(self, data):
-        if data is not None: # ndarray¸¸ Ãë±ŞÇÏ°Ô²û ¼³Á¤
+        if data is not None: # ndarrayë§Œ ì·¨ê¸‰í•˜ë„ë¡ ì„¤ì •
             if not isinstance(data, np.ndarray):
-                raise TypeError('{}Àº(´Â) Áö¿øÇÏÁö ¾Ê½À´Ï´Ù.'.format(type(data)))
+                raise TypeError('{}ì€(ëŠ”) ì§€ì›í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.'.format(type(data)))
         
-        self.data = data # µ¥ÀÌÅÍ ÀúÀå 
-        self.grad = None # ±â¿ï±â ÀúÀå
-        self.creator = None # ÀÌ º¯¼ö¸¦ ÀúÀåÇÑ Ã¢Á¶ÀÚ¸¦ ÀúÀå
-        self.generation = 0 # ¼¼´ë ¼ö¸¦ ±â·ÏÇÏ´Â º¯¼ö (º¹ÀâÇÑ °è»êÀ» À§ÇÑ º¯¼ö)
+        self.data = data # ë°ì´í„° ì €ì¥
+        self.grad = None # ê¸°ìš¸ê¸° ì €ì¥
+        self.creator = None # ì´ ë³€ìˆ˜ë¥¼ ì €ì¥í•œ ì°½ì¡°ìë¥¼ ì €ì¥
+        self.generation = 0  # ì„¸ëŒ€ ìˆ˜ë¥¼ ê¸°ë¡í•˜ëŠ” ë³€ìˆ˜ (ë³µì¡í•œ ê³„ì‚°ì„ ìœ„í•œ ë³€ìˆ˜)
 
     def set_creator(self, func):
         self.creator = func
         self.generation = func.generation + 1 
 
-    def backward(self, retain_grad = False): # º¯¼ö·ÎºÎÅÍ ¿ªÀüÆÄ¸¦ ½ÇÇàÇÒ ¼ö ÀÖ°Ô²û ¿ªÀüÆÄ ÇÔ¼ö »ı¼º
+    def backward(self, retain_grad = False): # ë³€ìˆ˜ë¡œë¶€í„° ì—­ì „íŒŒë¥¼ ì‹¤í–‰í•  ìˆ˜ ìˆê²Œë” ì—­ì „íŒŒ í•¨ìˆ˜ ìƒì„±
         if self.grad is None:
-            # data¿Í Çü»ó°ú µ¥ÀÌÅÍ Å¸ÀÔÀÌ °°Àº ndarray ÀÎ½ºÅÏ½º¸¦ »ı¼ºÇÏ´Âµ¥, ¸ğµç ¿ä¼Ò¸¦ 1·Î Ã¤¿ö¼­ µ¹·ÁÁİ´Ï´Ù. ¿ªÀüÆÄ¶§ 1À» ÀÔ·ÂÇÏ´Â°ÍÀ» »ı·«ÇÏ±â À§ÇÔ
+            # dataì™€ í˜•ìƒê³¼ ë°ì´í„° íƒ€ì…ì´ ê°™ì€ ndarray ì¸ìŠ¤í„´ìŠ¤ë¥¼ ìƒì„±í•˜ëŠ”ë°, ëª¨ë“  ìš”ì†Œë¥¼ 1ë¡œ ì±„ì›Œì„œ ëŒë ¤ì¤ë‹ˆë‹¤. ì—­ì „íŒŒë•Œ 1ì„ ì…ë ¥í•˜ëŠ”ê²ƒì„ ìƒëµí•˜ê¸° ìœ„í•¨
             self.grad = np.ones_like(self.data) 
             
         funcs = []
@@ -32,8 +32,8 @@ class Variable:
         add_func(self.creator)
 
         while funcs:
-            f = funcs.pop() # ÇÔ¼ö¸¦ ²¨³¿
-            gys = [output().grad for output in f.outputs] # ÂüÁ¶µÈ µ¥ÀÌÅÍ¿¡ Á¢±ÙÇÏ·Á¸é b()Ã³·³ ¾²¸é µÈ´Ù.
+            f = funcs.pop() # í•¨ìˆ˜ë¥¼ êº¼ëƒ„
+            gys = [output().grad for output in f.outputs] # ì°¸ì¡°ëœ ë°ì´í„°ì— ì ‘ê·¼í•˜ë ¤ë©´ b()ì²˜ëŸ¼ ì“°ë©´ ëœë‹¤.
             gxs = f.backward(*gys)
             if not isinstance(gxs, tuple):
                 gxs = (gxs,)
@@ -47,11 +47,11 @@ class Variable:
                 if x.creator is not None:
                     add_func(x.creator)
 
-            if not retain_grad: #retain_grad°¡ Ture¸é ¸ğµç º¯¼ö°¡ ±â¿ï±â¸¦ À¯Áö False¸é Áß°£ º¯¼öÀÇ ¹ÌºĞ°ªÀ» ¸ğµÎ None
+            if not retain_grad: #retain_gradê°€ Tureë©´ ëª¨ë“  ë³€ìˆ˜ê°€ ê¸°ìš¸ê¸°ë¥¼ ìœ ì§€ Falseë©´ ì¤‘ê°„ ë³€ìˆ˜ì˜ ë¯¸ë¶„ê°’ì„ ëª¨ë‘ None
                 for y in f.outputs:
                     y().grad = None
 
-    def cleargrad(self): #¹ÌºĞ°ªÀ» ÃÊ±âÈ­ ÇÏ´Â ÇÔ¼ö
+    def cleargrad(self):  #ë¯¸ë¶„ê°’ì„ ì´ˆê¸°í™” í•˜ëŠ” í•¨ìˆ˜
         self.grad = None
 
 

@@ -9,4 +9,4 @@ x = Variable(np.ones((100,100,100)))
 y = square(square(square(x)))
 a = y.backward()
 
-print(a)
+print(x.grad)

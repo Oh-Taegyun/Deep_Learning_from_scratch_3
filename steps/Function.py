@@ -4,26 +4,31 @@ from utility import *
 import weakref
 
 class Config: 
-    enable_backprop = True # True¸é ¿ªÀüÆÄ ÄÚµå È°¼ºÈ­ False¸é ¿ªÀüÆÄ ÄÚµå ºñÈ°¼ºÈ­
+    enable_backprop = True # Trueë©´ ì—­ì „íŒŒ ì½”ë“œ í™œì„±í™” Falseë©´ ì—­ì „íŒŒ ì½”ë“œ ë¹„í™œì„±í™”
+
+def as_array(x):
+    if np.isscalar(x):  # ìŠ¤ì¹¼ë¼ íƒ€ìž…ì¸ì§€ í™•ì¸í•´ì£¼ëŠ” í•¨ìˆ˜
+         return np.array(x)
+    return x
 
 class Function:
-    def __call__(self, *inputs): #°¡º¯ ÀÎÀÚ ÇÔ¼ö·Î ¹ÞÀ½
-        xs = [x.data for x in inputs] #¸®½ºÆ® ³»Æ÷
+    def __call__(self, *inputs): #ê°€ë³€ ì¸ìž í•¨ìˆ˜ë¡œ ë°›ìŒ
+        xs = [x.data for x in inputs] #ë¦¬ìŠ¤íŠ¸ ë‚´í¬
         ys = self.forward(*xs)
         if not isinstance(ys, tuple): 
             ys = (ys,)
-        outputs =[ Variable(as_array(y) for y in ys)] #y°¡ ½ºÄ®¶óÀÎ °æ¿ì ndarray ÀÎ½ºÅÏ½º·Î º¯È¯
+        outputs =[Variable(as_array(y)) for y in ys] #yê°€ ìŠ¤ì¹¼ë¼ì¸ ê²½ìš° ndarray ì¸ìŠ¤í„´ìŠ¤ë¡œ ë³€í™˜
 
-        if Config.enable_backprop: # ÇÐ½À ½Ã¿¡´Â ¹ÌºÐ°ªÀ» ±¸ÇØ¾ß ÇØ¼­ ÀÔ·Â°ªÀ» ÀúÀåÇØ¾ßÇÏÁö¸¸, Ãß·Ð½Ã¿¡´Â ¼øÀüÆÄ¸¸ ÇÏ±â ¶§¹®¿¡ °è»ê °á°ú¸¦ ¹ö¸²
+        if Config.enable_backprop: # í•™ìŠµ ì‹œì—ëŠ” ë¯¸ë¶„ê°’ì„ êµ¬í•´ì•¼ í•´ì„œ ìž…ë ¥ê°’ì„ ì €ìž¥í•´ì•¼í•˜ì§€ë§Œ, ì¶”ë¡ ì‹œì—ëŠ” ìˆœì „íŒŒë§Œ í•˜ê¸° ë•Œë¬¸ì— ê³„ì‚° ê²°ê³¼ë¥¼ ë²„ë¦¼
             self.generation = max([x.generation for x in inputs])
 
-            for output in outputs: # Ãâ·Â º¯¼öµé Ã¢Á¶ÀÚ ¼³Á¤
+            for output in outputs: # ì¶œë ¥ ë³€ìˆ˜ë“¤ ì°½ì¡°ìž ì„¤ì •
                 output.set_creator(self)
 
-            self.inputs = inputs # ÀÔ·Â º¯¼ö¸¦ ±â¾ïÇÔ
-            self.outputs = [weakref.ref(output) for output in outputs] #¼øÈ¯ ÂüÁ¶¸¦ ¸·±â À§ÇØ¼­ ¾àÇÑ ÂüÁ¶¸¦ ¸¸µê
+            self.inputs = inputs # ìž…ë ¥ ë³€ìˆ˜ë¥¼ ê¸°ì–µí•¨
+            self.outputs = [weakref.ref(output) for output in outputs] #ìˆœí™˜ ì°¸ì¡°ë¥¼ ë§‰ê¸° ìœ„í•´ì„œ ì•½í•œ ì°¸ì¡°ë¥¼ ë§Œë“¦
 
-        return outputs if len(outputs) > 1 else output[0]
+        return outputs if len(outputs) > 1 else outputs[0]
 
     def forward(self, xs):
         raise NOTImplementedError()

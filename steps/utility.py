@@ -3,13 +3,11 @@ import numpy as np
 from Variable import Variable
 from Function import Function
 
-#ÀÔ·ÂÀÌ ½ºÄ®¶óÀÎ °æ¿ì ndarray ÀÎ½ºÅÏ½º·Î º¯È¯ÇØ ÁÖ´Â ÇÔ¼ö
+#ì…ë ¥ì´ ìŠ¤ì¹¼ë¼ì¸ ê²½ìš° ndarray ì¸ìŠ¤í„´ìŠ¤ë¡œ ë³€í™˜í•´ ì£¼ëŠ” í•¨ìˆ˜
 def as_array(x):
-    if np.isscaler(x): #½ºÄ®¶ó Å¸ÀÔÀÎÁö È®ÀÎÇØÁÖ´Â ÇÔ¼ö
+    if np.isscalar(x): #ìŠ¤ì¹¼ë¼ íƒ€ì…ì¸ì§€ í™•ì¸í•´ì£¼ëŠ” í•¨ìˆ˜
         return np.array(x)
-    return x 
-
-
+    return x
 
 class Exp(Function):
     def forward(self,x):
@@ -21,14 +19,13 @@ class Exp(Function):
         gx = np.exp(x) * gy 
         return gx
 
-
 class Square(Function):
     def forward(self, x):
         y = x ** 2
         return y
 
     def backward(self, gy):
-        x = self.inputs[0].data #°¡º¯ ÀÎÀÚ ÇÔ¼ö·Î ÀÔ·Â°ªÀÌ Æ©ÇÃ·Î ÀÎ½ÄµÇ¾ú±â ¶§¹®¿¡ inputs[0]ÀÌ´Ù.
+        x = self.inputs[0].data #ê°€ë³€ ì¸ì í•¨ìˆ˜ë¡œ ì…ë ¥ê°’ì´ íŠœí”Œë¡œ ì¸ì‹ë˜ì—ˆê¸° ë•Œë¬¸ì— inputs[0]ì´ë‹¤.
         gx = 2*x*gy
         return gx
 
@@ -41,7 +38,7 @@ class Add(Function):
         return gy, gy
 
 
-# ÀÌ ¹ØÀ¸·Î´Â ÆÄÀÌ½ã ÇÔ¼ö·Î º¯È¯
+# ì´ ë°‘ìœ¼ë¡œëŠ” íŒŒì´ì¬ í•¨ìˆ˜ë¡œ ë³€í™˜
 def square(x):
     return Square()(x)
 
