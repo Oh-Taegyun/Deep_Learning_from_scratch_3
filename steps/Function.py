@@ -1,18 +1,25 @@
 import numpy as np
 from Variable import *
 from utility import *
+from using_config import *
 import weakref
 
-class Config: 
-    enable_backprop = True # True면 역전파 코드 활성화 False면 역전파 코드 비활성화
 
+#입력이 스칼라인 경우 ndarray 인스턴스로 변환해 주는 함수
 def as_array(x):
-    if np.isscalar(x):  # 스칼라 타입인지 확인해주는 함수
-         return np.array(x)
+    if np.isscalar(x): #스칼라 타입인지 확인해주는 함수
+        return np.array(x)
     return x
+
+# obj가 variable 인스턴스가 아닐 경우 변환해서 반환하는 기능
+def as_varialbe(obj):
+    if isinstance(obj, Variable):
+        return obj
+    return Variable(obj)
 
 class Function:
     def __call__(self, *inputs): #가변 인자 함수로 받음
+        inputs = [as_varialbe(x) for x in inputs]
         xs = [x.data for x in inputs] #리스트 내포
         ys = self.forward(*xs)
         if not isinstance(ys, tuple): 

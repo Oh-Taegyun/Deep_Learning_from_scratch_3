@@ -1,12 +1,15 @@
 import numpy as np
+from utility import *
 
 class Variable:
-    def __init__(self, data):
+    __array_priority__ = 200 # Variable 인스턴스의 연산자 우선순위를 ndarray 인스턴스의 연산자 우선순위보다 높이는 기능
+    def __init__(self, data, name=None):
         if data is not None: # ndarray만 취급하도록 설정
             if not isinstance(data, np.ndarray):
                 raise TypeError('{}은(는) 지원하지 않습니다.'.format(type(data)))
         
         self.data = data # 데이터 저장
+        self.name = name # 변수에 붙일 이름
         self.grad = None # 기울기 저장
         self.creator = None # 이 변수를 저장한 창조자를 저장
         self.generation = 0  # 세대 수를 기록하는 변수 (복잡한 계산을 위한 변수)
@@ -54,9 +57,32 @@ class Variable:
     def cleargrad(self):  #미분값을 초기화 하는 함수
         self.grad = None
 
+    @property # 이 한줄덕분에 shape 메서드를 인스턴스 변수처럼 사용할 수 있음.
+    def shape(self):
+        return self.data.shape
 
+    @property
+    def size(self):
+        return self.data.size
 
+    @property
+    def dtype(self):
+        return self.data.dtype
 
+    def __len__(self):
+        return len(self.data)
 
+    def __repr__(self):
+        if self.data is None:
+            return 'variable(None)'
+        p = str(self.daat).replace('\n', '\n' + ' ' * 9)
+        return 'variable(' + p + ')'
+    
+    '''
+    def __mul__(self, other):
+        return mul(self,other)
+    더 간단하게 하는 방법이 있는데 Variable.__mul__ = mul로 하면 간단하다.
+    '''
+  
 
 
