@@ -1,6 +1,7 @@
 ﻿import contextlib
 from Variable import *
 
+
 class Config:
     enable_backprop = True # True면 역전파 코드 활성화 False면 역전파 코드 비활성화
 
@@ -16,7 +17,6 @@ def using_config(name, value):
 
 def no_grad():
     return using_config('enable_backprop', False)
-
 
 '''
 #근데 try, finally로도 구현이 가능하지만 컨텍스트 매니저로 이용하면 더 깔끔할것 같다고 시작했으나, 클래스 안에서(using_config) 

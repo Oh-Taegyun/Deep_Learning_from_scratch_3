@@ -1,12 +1,9 @@
-import numpy as np
-from Variable import *
-from utility import *
-from Function import *
-from using_config import *
+# -------------------------------------------------------------------------------------------------
+# 실행하고자 파는 파일에 주석을 풀면 파이썬 명령어를 어디에서든 실행하던 dezero 디렉터이릐 파일을 임포트할 수 있다.
+# -------------------------------------------------------------------------------------------------
 
-with no_grad():
-    x = Variable(np.array(1.0))
-    y = square(square(square(x)))
-    print(y.data)
 
+if '__file__' in globals():
+    import os, sys
+    sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 

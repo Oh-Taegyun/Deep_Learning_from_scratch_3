@@ -1,7 +1,47 @@
-﻿class Config:
+﻿import numpy as np
+import contextlib
+import weakref
+
+# ----------------------------------------------------------------------------------
+# Config - True면 역전파 코드 활성화 False면 역전파 코드 비활성화
+# ----------------------------------------------------------------------------------
+class Config:
     enable_backprop = True # True면 역전파 코드 활성화 False면 역전파 코드 비활성화
 
+#입력이 스칼라인 경우 ndarray 인스턴스로 변환해 주는 함수
 
+
+
+# ----------------------------------------------------------------------------------
+# 다양한 함수들
+# ----------------------------------------------------------------------------------
+def as_array(x):
+    if np.isscalar(x): #스칼라 타입인지 확인해주는 함수
+        return np.array(x)
+    return x
+
+# obj가 variable 인스턴스가 아닐 경우 변환해서 반환하는 기능
+def as_varialbe(obj):
+    if isinstance(obj, Variable):
+        return obj
+    return Variable(obj)
+
+@contextlib.contextmanager
+def using_config(name, value):
+    old_value = getattr(Config,name) #오브젝트(config)안에 찾고자 하는 변수(name)값을 출력
+    setattr(Config, name, value) #오브젝트(config)안에 새로운 변수(name)를 추가하고 값은(value)로 설정
+    try:
+        yield
+    finally:
+        setattr(Config, name, old_value)
+
+def no_grad():
+    return using_config('enable_backprop', False)
+
+
+# ----------------------------------------------------------------------------------
+# Variable / Function
+# ----------------------------------------------------------------------------------
 class Variable:
     __array_priority__ = 200  # Variable 인스턴스의 연산자 우선순위를 ndarray 인스턴스의 연산자 우선순위보다 높이는 기능
 
@@ -77,9 +117,8 @@ class Variable:
     def __repr__(self):
         if self.data is None:
             return 'variable(None)'
-        p = str(self.daat).replace('\n', '\n' + ' ' * 9)
+        p = str(self.data).replace('\n', '\n' + ' ' * 9)
         return 'variable(' + p + ')'
-
 
 class Function:
     def __call__(self, *inputs): #가변 인자 함수로 받음
@@ -102,38 +141,14 @@ class Function:
         return outputs if len(outputs) > 1 else outputs[0]
 
     def forward(self, xs):
-        raise NOTImplementedError()
+        raise NotImplementedError()
 
     def backward(self, gys):
-        raise NOTImplementedError()
+        raise NotImplementedError()
 
-
-def as_array(x):
-    if np.isscalar(x):  # 스칼라 타입인지 확인해주는 함수
-        return np.array(x)
-    return x
-
-
-class Exp(Function):
-    def forward(self, x):
-        y = np.exp(x)
-        return y
-
-    def backward(self, gy):
-        x = self.input.data
-        gx = np.exp(x) * gy
-        return gx
-
-
-class Square(Function):
-    def forward(self, x):
-        y = x ** 2
-        return y
-
-    def backward(self, gy):
-        x = self.inputs[0].data  # 가변 인자 함수로 입력값이 튜플로 인식되었기 때문에 inputs[0]이다.
-        gx = 2 * x * gy
-        return gx
+# ----------------------------------------------------------------------------------
+# 사칙연산, 연산자 오버로드
+# ----------------------------------------------------------------------------------
 
 
 class Add(Function):
@@ -188,7 +203,7 @@ class Pow(Function):
     def __init__(self, c):
         self.c = c
 
-    def forward(self, xs):
+    def forward(self, x):
         y = x ** self.c
         return y
 
@@ -200,13 +215,6 @@ class Pow(Function):
 
 
 # 이 밑으로는 파이썬 함수로 변환
-def square(x):
-    return Square()(x)
-
-
-def exp(x):
-    return Exp()(x)
-
 
 def add(x0, x1):
     return Add()(x0, x1)
@@ -216,7 +224,7 @@ def mul(x0, x1):
     return Mul()(x0, x1)
 
 
-def neg(X):
+def neg(x):
     return Neg()(x)
 
 
