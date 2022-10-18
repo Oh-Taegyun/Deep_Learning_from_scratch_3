@@ -21,7 +21,7 @@ def as_array(x):
     return x
 
 # obj가 variable 인스턴스가 아닐 경우 변환해서 반환하는 기능
-def as_varialbe(obj):
+def as_variable(obj):
     if isinstance(obj, Variable):
         return obj
     return Variable(obj)
@@ -122,7 +122,8 @@ class Variable:
 
 class Function:
     def __call__(self, *inputs): #가변 인자 함수로 받음
-        inputs = [as_varialbe(x) for x in inputs]
+        inputs = [as_variable(x) for x in inputs]
+
         xs = [x.data for x in inputs] #리스트 내포
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):
@@ -150,7 +151,7 @@ class Function:
 # 사칙연산, 연산자 오버로드
 # ----------------------------------------------------------------------------------
 
-
+# Add ------------------------------------------------------------------------------
 class Add(Function):
     def forward(self, x0, x1):
         y = x0 + x1
@@ -158,18 +159,28 @@ class Add(Function):
 
     def backward(self, gy):
         return gy, gy
+    
+def add(x0, x1):
+    x1 = as_array(x1) # 이제 x + 3.0 같은 계산도 가능함 as_array가 자동 형변환 해주기 때문
+    return Add()(x0, x1)
+# ----------------------------------------------------------------------------------
 
-
+# Mul ------------------------------------------------------------------------------
 class Mul(Function):
     def forward(self, x0, x1):
         y = x0 * x1
-        return
+        return y
 
     def backward(self, gy):
         x0, x1 = self.inputs[0].data, self.inputs[1].data
         return gy * x1, gy * x0
+    
+def mul(x0, x1):
+    x1 = as_array(x1)
+    return Mul()(x0, x1)
+# ----------------------------------------------------------------------------------
 
-
+# Neg ------------------------------------------------------------------------------
 class Neg(Function):
     def forward(self, x):
         return -x
@@ -177,7 +188,11 @@ class Neg(Function):
     def backward(self, gy):
         return -gy
 
+def neg(x):
+    return Neg()(x)
+# ----------------------------------------------------------------------------------
 
+# Sub ------------------------------------------------------------------------------
 class Sub(Function):
     def forward(self, x0, x1):
         y = x0 - x1
@@ -186,7 +201,16 @@ class Sub(Function):
     def backward(self, gy):
         return gy, -gy
 
+def sub(x0, x1):
+    x1 = as_array(x1)
+    return Sub()(x0, x1)
 
+def rsub(x0, x1):
+    x1 = as_array(x1)
+    return Sub()(x1, x0)
+# ----------------------------------------------------------------------------------
+
+# Div ------------------------------------------------------------------------------
 class Div(Function):
     def forward(self, x0, x1):
         y = x0 / x1
@@ -198,7 +222,17 @@ class Div(Function):
         gx1 = gy * (-x0 / x1 ** 2)
         return gx0, gx1
 
+def div(x0, x1):
+    x1 = as_array(x1)
+    return Div()(x0, x1)
 
+def rdiv(x0, x1):
+    x1 = as_array(x1)
+    return Div()(x1, x0)
+
+# ----------------------------------------------------------------------------------
+
+# Pow ------------------------------------------------------------------------------
 class Pow(Function):
     def __init__(self, c):
         self.c = c
@@ -213,43 +247,9 @@ class Pow(Function):
         gx = c * x ** (c - 1) * gy
         return gx
 
-
-# 이 밑으로는 파이썬 함수로 변환
-
-def add(x0, x1):
-    return Add()(x0, x1)
-
-
-def mul(x0, x1):
-    return Mul()(x0, x1)
-
-
-def neg(x):
-    return Neg()(x)
-
-
-def sub(x0, x1):
-    x1 = as_array(x1)
-    return Sub()(x0, x1)
-
-
-def rsub(x0, x1):
-    x1 = as_array(x1)
-    return Sub()(x1, x0)
-
-
-def div(x0, x1):
-    x1 = as_array(x1)
-    return Div()(x0, x1)
-
-
-def rdiv(x0, x1):
-    x1 = as_array(x1)
-    return Div()(x1, x0)
-
-
 def pow(x, c):
     return Pow(c)(x)
+# ----------------------------------------------------------------------------------
 
 
 # 보다 간편한 계산을 위한 연산자 오버로드
