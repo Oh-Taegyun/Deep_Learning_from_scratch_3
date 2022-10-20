@@ -2,6 +2,9 @@
 import contextlib
 import weakref
 
+import Dezore.functions
+
+
 # ----------------------------------------------------------------------------------
 # Config - True면 역전파 코드 활성화 False면 역전파 코드 비활성화
 # ----------------------------------------------------------------------------------
@@ -60,10 +63,11 @@ class Variable:
         self.creator = func
         self.generation = func.generation + 1
 
-    def backward(self, retain_grad=False):  # 변수로부터 역전파를 실행할 수 있게끔 역전파 함수 생성
+    def backward(self, retain_grad=False, create_graph=False):  # 변수로부터 역전파를 실행할 수 있게끔 역전파 함수 생성
         if self.grad is None:
             # data와 형상과 데이터 타입이 같은 ndarray 인스턴스를 생성하는데, 모든 요소를 1로 채워서 돌려줍니다. 역전파때 1을 입력하는것을 생략하기 위함
-            self.grad = np.ones_like(self.data)
+            # self.grad = np.ones_like(self.data)
+            self.grad = Variable(np.ones_like(self.data)) # 고차 미분을 위한 구현
 
         funcs = []
         seen_set = set()
@@ -79,18 +83,20 @@ class Variable:
         while funcs:
             f = funcs.pop()  # 함수를 꺼냄
             gys = [output().grad for output in f.outputs]  # 참조된 데이터에 접근하려면 b()처럼 쓰면 된다.
-            gxs = f.backward(*gys)
-            if not isinstance(gxs, tuple):
-                gxs = (gxs,)
 
-            for x, gx in zip(f.inputs, gxs):
-                if x.grad is None:
-                    x.grad = gx
-                else:
-                    x.grad = x.grad + gx
+            with using_config('enable_backprop',create_graph):
+                gxs = f.backward(*gys)
+                if not isinstance(gxs, tuple):
+                    gxs = (gxs,)
 
-                if x.creator is not None:
-                    add_func(x.creator)
+                for x, gx in zip(f.inputs, gxs):
+                    if x.grad is None:
+                        x.grad = gx
+                    else:
+                        x.grad = x.grad + gx # 만일 기울기가 있다면 누적
+
+                    if x.creator is not None:
+                        add_func(x.creator)
 
             if not retain_grad:  # retain_grad가 Ture면 모든 변수가 기울기를 유지 False면 중간 변수의 미분값을 모두 None
                 for y in f.outputs:
@@ -119,6 +125,27 @@ class Variable:
             return 'variable(None)'
         p = str(self.data).replace('\n', '\n' + ' ' * 9)
         return 'variable(' + p + ')'
+
+    def reshape(self, *shape): # 데이터 형상 바꾸는 함수
+        if len(shape) == 1 and isinstance(shape[0],(tuple, list)):
+            shape = shape[0]
+        return Dezore.functions.reshape(self, shape)
+
+    def traspose(self, *axes): # 전치 행렬을 구하기 위한 함수
+        if len(axes) == 0:
+            axes = None
+        elif len(axes) == 1:
+            if isinstance(axes[0], (tuple, list)) or axes[0] is None:
+                axes = axes[0]
+        return Dezore.functions.transpose(self, axes)
+
+    @property
+    def T(self):
+        return Dezore.functions.transpose(self)
+
+    def sum(self, axis=None, keepdims=False):
+        return Dezore.functions.sum(self, axis,keepdims)
+
 
 class Function:
     def __call__(self, *inputs): #가변 인자 함수로 받음
@@ -154,11 +181,16 @@ class Function:
 # Add ------------------------------------------------------------------------------
 class Add(Function):
     def forward(self, x0, x1):
+        self.x0_shape, self.x1_shape = x0.shape, x1.shape
         y = x0 + x1
         return y
 
     def backward(self, gy):
-        return gy, gy
+        gx0, gx1 = gy, gy
+        if self.x0_shape != self.x1_shape:
+            gx0 = Dezore.functions.sum_to(gx0, self.x0_shape)
+            gx1 = Dezore.functions.sum_to(gx1, self.x1_shape)
+        return gx0, gx1
     
 def add(x0, x1):
     x1 = as_array(x1) # 이제 x + 3.0 같은 계산도 가능함 as_array가 자동 형변환 해주기 때문
@@ -172,8 +204,14 @@ class Mul(Function):
         return y
 
     def backward(self, gy):
-        x0, x1 = self.inputs[0].data, self.inputs[1].data
-        return gy * x1, gy * x0
+        # x0, x1 = self.inputs[0].data, self.inputs[1].data 이 부분은 직접적으로 ndarray를 사용할 때 씀
+        x0, x1 = self.inputs
+        gx0 = gy * x1
+        gx1 = gy * x0
+        if x0.shape != x1.shape:
+            gx0 = Dezore.functions.sum_to(gx0, x0.shape)
+            gx1 = Dezore.functions.sum_to(gx1, x1.shape)
+        return gx0, gx1
     
 def mul(x0, x1):
     x1 = as_array(x1)
@@ -195,11 +233,17 @@ def neg(x):
 # Sub ------------------------------------------------------------------------------
 class Sub(Function):
     def forward(self, x0, x1):
+        self.x0_shape, self.x1_shape = x0.shape, x1.shape
         y = x0 - x1
         return y
 
     def backward(self, gy):
-        return gy, -gy
+        gx0 = gy
+        gx1 = -gy
+        if self.x0_shape != self.x1_shape:
+            gx0 = Dezore.functions.sum_to(gx0, self.x0_shape)
+            gx1 = Dezore.functions.sum_to(gx1, self.x1_shape)
+        return gx0, gx1
 
 def sub(x0, x1):
     x1 = as_array(x1)
@@ -217,9 +261,12 @@ class Div(Function):
         return y
 
     def backward(self, gy):
-        x0, x1 = self.inputs[0].data, self.inputs[1].data
+        x0, x1 = self.inputs
         gx0 = gy / x1
         gx1 = gy * (-x0 / x1 ** 2)
+        if x0.shape != x1.shape:
+            gx0 = Dezore.functions.sum_to(gx0, self.x0.shape)
+            gx1 = Dezore.functions.sum_to(gx1, self.x1.shape)
         return gx0, gx1
 
 def div(x0, x1):
@@ -242,7 +289,7 @@ class Pow(Function):
         return y
 
     def backward(self, gy):
-        x = self.inputs[0].data
+        x = self.inputs
         c = self.c
         gx = c * x ** (c - 1) * gy
         return gx
@@ -266,6 +313,11 @@ def setup_variable():
     Variable.__pow__ = pow
 
 
+# ----------------------------------------------------------------------------------
+# Parameter
+# ----------------------------------------------------------------------------------
+class Parameter(Variable):
+    pass
 
 
 

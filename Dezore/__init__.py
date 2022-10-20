@@ -5,6 +5,7 @@ from Dezore.core import no_grad
 from Dezore.core import as_array
 from Dezore.core import as_variable
 from Dezore.core import setup_variable
+from Dezore.core import Parameter
 
 setup_variable()
 
