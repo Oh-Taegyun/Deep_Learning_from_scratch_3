@@ -185,7 +185,7 @@ def mean_squared_error(x0, x1):
 # ----------------------------------------------------------------------------------
 # 선형 변환(Linear transformation)
 # ----------------------------------------------------------------------------------
-class Liner(Function):
+class Linear(Function):
     def forward(self, x, W, b):
         y = x.dot(W)
         if b is not None:
@@ -199,7 +199,8 @@ class Liner(Function):
         gW = matmul(x.T, gy)
         return gx, gW, gb
 
-def liner(x, W, b=None):
-    return Liner()(x,W,b)
+def linear(x, W, b=None):
+    return Linear()(x,W,b)
+
 
 
