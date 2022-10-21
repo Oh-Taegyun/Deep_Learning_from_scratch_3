@@ -1,13 +1,13 @@
 ﻿from Dezore.core import Parameter
 import numpy as np
 import Dezore.functions as F
-
+import weakref
 class Layer:
     def __init__(self):
         self._params = set()
 
     def __setattr__(self, name, value):
-        if isinstance(value, Parameter):
+        if isinstance(value, (Parameter, Layer)):
             self._params.add(name)
         super().__setattr__(name, value)
 
@@ -16,7 +16,7 @@ class Layer:
         if not isinstance(outputs, tuple):
             outputs = (outputs, )
         self.inputs = [weakref.ref(x) for x in inputs]
-        self.outputs = [weakref.ref(y) for y in inputs]
+        self.outputs = [weakref.ref(y) for y in outputs]
         return outputs if len(outputs) > 1 else outputs[0]
 
     def forward(self,inputs):
@@ -24,14 +24,19 @@ class Layer:
 
     def params(self):
         for name in self._params:
-            yield self.__dict__[name]
+            obj = self.__dict__[name]
+
+            if isinstance(obj, Layer):
+                yield from obj.params()
+            else:
+                yield obj
 
     def cleargrads(self):
         for param in self.params():
             param.cleargrad()
 
 class Linear(Layer):
-    def __init__(self, out_size, nobias=Fasle, dtype=np.float32, in_size=None):
+    def __init__(self, out_size, nobias=False, dtype=np.float32, in_size=None):
         super().__init__()
         self.in_size = in_size
         self.out_size = out_size
