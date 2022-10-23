@@ -8,6 +8,7 @@ from Dezore.core import setup_variable
 from Dezore.core import Parameter
 from Dezore.layers import Layer
 from Dezore.models import Model
+from Dezore.dataloaders import DataLoader
 
 setup_variable()
 

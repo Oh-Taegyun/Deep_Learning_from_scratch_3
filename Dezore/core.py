@@ -311,6 +311,7 @@ def setup_variable():
     Variable.__truediv__ = div
     Variable.__rtruediv__ = rdiv
     Variable.__pow__ = pow
+    Variable.__getitem__= Dezore.functions.get_item
 
 
 # ----------------------------------------------------------------------------------
