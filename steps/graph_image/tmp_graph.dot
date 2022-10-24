@@ -1,0 +1,219 @@
+digraph g {
+2270091687632 [label = "z", color=orange, style=filled]
+2270091689072 [label="Mul",color=lightblue, style=filled, shape=box]
+2270091614432 -> 2270091689072
+2270091688976 -> 2270091689072
+2270091689072 -> 2270091687632
+2270091614432 [label = "", color=orange, style=filled]
+2270091688976 [label = "", color=orange, style=filled]
+2270091689456 [label="Add",color=lightblue, style=filled, shape=box]
+2270091689552 -> 2270091689456
+2270091689264 -> 2270091689456
+2270091689456 -> 2270091688976
+2270091689552 [label = "", color=orange, style=filled]
+2270091689264 [label = "", color=orange, style=filled]
+2270091689600 [label="Mul",color=lightblue, style=filled, shape=box]
+2270091614096 -> 2270091689600
+2270091685952 -> 2270091689600
+2270091689600 -> 2270091689552
+2270091614096 [label = "", color=orange, style=filled]
+2270091685952 [label = "", color=orange, style=filled]
+2270091689840 [label="Add",color=lightblue, style=filled, shape=box]
+2270091686240 -> 2270091689840
+2270091688832 -> 2270091689840
+2270091689840 -> 2270091685952
+2270091686240 [label = "", color=orange, style=filled]
+2270091688832 [label = "", color=orange, style=filled]
+2270091689792 [label="Mul",color=lightblue, style=filled, shape=box]
+2270091687872 -> 2270091689792
+2270091687968 -> 2270091689792
+2270091689792 -> 2270091688832
+2270091687872 [label = "", color=orange, style=filled]
+2270091687968 [label = "", color=orange, style=filled]
+2270091686336 [label="Pow",color=lightblue, style=filled, shape=box]
+2270092665568 -> 2270091686336
+2270091686336 -> 2270091687872
+2270092665568 [label = "y", color=orange, style=filled]
+2270091687344 [label="Sub",color=lightblue, style=filled, shape=box]
+2270091686768 -> 2270091687344
+2270091687104 -> 2270091687344
+2270091687344 -> 2270091686240
+2270091686768 [label = "", color=orange, style=filled]
+2270091687104 [label = "", color=orange, style=filled]
+2270091687200 [label="Mul",color=lightblue, style=filled, shape=box]
+2270091687008 -> 2270091687200
+2270092665568 -> 2270091687200
+2270091687200 -> 2270091687104
+2270091687008 [label = "", color=orange, style=filled]
+2270092665568 [label = "y", color=orange, style=filled]
+2270091686672 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092665376 -> 2270091686672
+2270091686480 -> 2270091686672
+2270091686672 -> 2270091687008
+2270092665376 [label = "x", color=orange, style=filled]
+2270091686480 [label = "", color=orange, style=filled]
+2270091686816 [label="Add",color=lightblue, style=filled, shape=box]
+2270091686096 -> 2270091686816
+2270091686384 -> 2270091686816
+2270091686816 -> 2270091686768
+2270091686096 [label = "", color=orange, style=filled]
+2270091686384 [label = "", color=orange, style=filled]
+2270091686048 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092665568 -> 2270091686048
+2270091689216 -> 2270091686048
+2270091686048 -> 2270091686384
+2270092665568 [label = "y", color=orange, style=filled]
+2270091689216 [label = "", color=orange, style=filled]
+2270091687488 [label="Add",color=lightblue, style=filled, shape=box]
+2270091615824 -> 2270091687488
+2270091687728 -> 2270091687488
+2270091687488 -> 2270091686096
+2270091615824 [label = "", color=orange, style=filled]
+2270091687728 [label = "", color=orange, style=filled]
+2270091613184 [label="Mul",color=lightblue, style=filled, shape=box]
+2270091613136 -> 2270091613184
+2270091687392 -> 2270091613184
+2270091613184 -> 2270091687728
+2270091613136 [label = "", color=orange, style=filled]
+2270091687392 [label = "", color=orange, style=filled]
+2270091612560 [label="Pow",color=lightblue, style=filled, shape=box]
+2270092665376 -> 2270091612560
+2270091612560 -> 2270091613136
+2270092665376 [label = "x", color=orange, style=filled]
+2270091612752 [label="Sub",color=lightblue, style=filled, shape=box]
+2270091612608 -> 2270091612752
+2270091613376 -> 2270091612752
+2270091612752 -> 2270091615824
+2270091612608 [label = "", color=orange, style=filled]
+2270091613376 [label = "", color=orange, style=filled]
+2270091615200 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092665376 -> 2270091615200
+2270091612416 -> 2270091615200
+2270091615200 -> 2270091613376
+2270092665376 [label = "x", color=orange, style=filled]
+2270091612416 [label = "", color=orange, style=filled]
+2270091614576 [label="Pow",color=lightblue, style=filled, shape=box]
+2270091612800 -> 2270091614576
+2270091614576 -> 2270091614096
+2270091612800 [label = "", color=orange, style=filled]
+2270091613808 [label="Sub",color=lightblue, style=filled, shape=box]
+2270091614000 -> 2270091613808
+2270091614240 -> 2270091613808
+2270091613808 -> 2270091612800
+2270091614000 [label = "", color=orange, style=filled]
+2270091614240 [label = "", color=orange, style=filled]
+2270091615344 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092665568 -> 2270091615344
+2270091615296 -> 2270091615344
+2270091615344 -> 2270091614240
+2270092665568 [label = "y", color=orange, style=filled]
+2270091615296 [label = "", color=orange, style=filled]
+2270091614528 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092665376 -> 2270091614528
+2270091614720 -> 2270091614528
+2270091614528 -> 2270091614000
+2270092665376 [label = "x", color=orange, style=filled]
+2270091614720 [label = "", color=orange, style=filled]
+2270091613856 [label="Add",color=lightblue, style=filled, shape=box]
+2270091613760 -> 2270091613856
+2270091614336 -> 2270091613856
+2270091613856 -> 2270091614432
+2270091613760 [label = "", color=orange, style=filled]
+2270091614336 [label = "", color=orange, style=filled]
+2270091613664 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092666288 -> 2270091613664
+2270091614624 -> 2270091613664
+2270091613664 -> 2270091613760
+2270092666288 [label = "", color=orange, style=filled]
+2270091614624 [label = "", color=orange, style=filled]
+2270092664896 [label="Add",color=lightblue, style=filled, shape=box]
+2270092668640 -> 2270092664896
+2270092664992 -> 2270092664896
+2270092664896 -> 2270091614624
+2270092668640 [label = "", color=orange, style=filled]
+2270092664992 [label = "", color=orange, style=filled]
+2270092668832 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092668880 -> 2270092668832
+2270092665184 -> 2270092668832
+2270092668832 -> 2270092664992
+2270092668880 [label = "", color=orange, style=filled]
+2270092665184 [label = "", color=orange, style=filled]
+2270092668736 [label="Pow",color=lightblue, style=filled, shape=box]
+2270092665568 -> 2270092668736
+2270092668736 -> 2270092668880
+2270092665568 [label = "y", color=orange, style=filled]
+2270092668544 [label="Add",color=lightblue, style=filled, shape=box]
+2270092667968 -> 2270092668544
+2270092668448 -> 2270092668544
+2270092668544 -> 2270092668640
+2270092667968 [label = "", color=orange, style=filled]
+2270092668448 [label = "", color=orange, style=filled]
+2270092668352 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092668256 -> 2270092668352
+2270092665568 -> 2270092668352
+2270092668352 -> 2270092668448
+2270092668256 [label = "", color=orange, style=filled]
+2270092665568 [label = "y", color=orange, style=filled]
+2270092668064 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092665376 -> 2270092668064
+2270092668160 -> 2270092668064
+2270092668064 -> 2270092668256
+2270092665376 [label = "x", color=orange, style=filled]
+2270092668160 [label = "", color=orange, style=filled]
+2270092667872 [label="Sub",color=lightblue, style=filled, shape=box]
+2270092667488 -> 2270092667872
+2270092667776 -> 2270092667872
+2270092667872 -> 2270092667968
+2270092667488 [label = "", color=orange, style=filled]
+2270092667776 [label = "", color=orange, style=filled]
+2270092667584 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092665568 -> 2270092667584
+2270092667680 -> 2270092667584
+2270092667584 -> 2270092667776
+2270092665568 [label = "y", color=orange, style=filled]
+2270092667680 [label = "", color=orange, style=filled]
+2270092667392 [label="Add",color=lightblue, style=filled, shape=box]
+2270092666816 -> 2270092667392
+2270092667296 -> 2270092667392
+2270092667392 -> 2270092667488
+2270092666816 [label = "", color=orange, style=filled]
+2270092667296 [label = "", color=orange, style=filled]
+2270092667008 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092667056 -> 2270092667008
+2270092667200 -> 2270092667008
+2270092667008 -> 2270092667296
+2270092667056 [label = "", color=orange, style=filled]
+2270092667200 [label = "", color=orange, style=filled]
+2270092666912 [label="Pow",color=lightblue, style=filled, shape=box]
+2270092665376 -> 2270092666912
+2270092666912 -> 2270092667056
+2270092665376 [label = "x", color=orange, style=filled]
+2270092666624 [label="Sub",color=lightblue, style=filled, shape=box]
+2270092666720 -> 2270092666624
+2270092666528 -> 2270092666624
+2270092666624 -> 2270092666816
+2270092666720 [label = "", color=orange, style=filled]
+2270092666528 [label = "", color=orange, style=filled]
+2270092666240 [label="Mul",color=lightblue, style=filled, shape=box]
+2270092665376 -> 2270092666240
+2270092666432 -> 2270092666240
+2270092666240 -> 2270092666528
+2270092665376 [label = "x", color=orange, style=filled]
+2270092666432 [label = "", color=orange, style=filled]
+2270092666144 [label="Pow",color=lightblue, style=filled, shape=box]
+2270092666048 -> 2270092666144
+2270092666144 -> 2270092666288
+2270092666048 [label = "", color=orange, style=filled]
+2270092665856 [label="Add",color=lightblue, style=filled, shape=box]
+2270092665760 -> 2270092665856
+2270092665952 -> 2270092665856
+2270092665856 -> 2270092666048
+2270092665760 [label = "", color=orange, style=filled]
+2270092665952 [label = "", color=orange, style=filled]
+2270092665664 [label="Add",color=lightblue, style=filled, shape=box]
+2270092665376 -> 2270092665664
+2270092665568 -> 2270092665664
+2270092665664 -> 2270092665760
+2270092665376 [label = "x", color=orange, style=filled]
+2270092665568 [label = "y", color=orange, style=filled]
+}

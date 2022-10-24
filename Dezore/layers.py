@@ -2,11 +2,12 @@
 import numpy as np
 import Dezore.functions as F
 import weakref
+
 class Layer:
     def __init__(self):
         self._params = set()
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name, value): # object에 존재하는 속성의 값을 바꾸거나 새로운 속성을 생성할때마다 호출되는 특수 메서드
         if isinstance(value, (Parameter, Layer)):
             self._params.add(name)
         super().__setattr__(name, value)
@@ -22,7 +23,7 @@ class Layer:
     def forward(self,inputs):
         raise NotImplementedError()
 
-    def params(self):
+    def params(self): # 파라미터를 반환함
         for name in self._params:
             obj = self.__dict__[name]
 
@@ -31,7 +32,7 @@ class Layer:
             else:
                 yield obj
 
-    def cleargrads(self):
+    def cleargrads(self): # 파라미터 초기화
         for param in self.params():
             param.cleargrad()
 
