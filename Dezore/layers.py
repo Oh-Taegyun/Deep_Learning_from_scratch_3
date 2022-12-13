@@ -56,11 +56,22 @@ class Linear(Layer):
         W_data = np.random(I,O).astype(self.dtype) * np.sprt(1/I)
         self.W.data = W_data
 
-    def forward(self,x):
+    def forward(self,x): 
         if self.W.data is None:
             self.in_size = x.shape[1]
             self._init_W()
 
         y = F.linear(x, self.W, self.b)
         return y
+
+'''
+왜 계층에는 forward만 있나요? backward도 있어야 하지 않나요?
+라고 할 수 있는데
+
+잘 보면 Linear계층 안에linear가 있다. 즉, 저 linear 함수에 의해서 계산 그래프가 형성이 된다.
+
+계층은 파라미터 + 함수 를 포함하고 있는 컨테이너라고 생각하면 된다.
+
+Function를 상속한 다양한 함수자(functions)에 의해서 계산 그래프가 형성될테니 계층의 backward는 함수자에 의해서 처리가 된 것이다. 
+'''
 

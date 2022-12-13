@@ -1,6 +1,6 @@
 ﻿import math
 import random
-import numpt as np
+import numpy as np
 
 class DataLoader:
     def __init__(self, dataset, batch_size, shuffle=True, gpu=False):

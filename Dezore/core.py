@@ -1,8 +1,8 @@
 ﻿import numpy as np
 import contextlib
 import weakref
+import Dezore
 
-import Dezore.functions
 
 
 # ----------------------------------------------------------------------------------
@@ -314,13 +314,13 @@ def setup_variable():
     Variable.__getitem__= Dezore.functions.get_item
 
 
+
+
 # ----------------------------------------------------------------------------------
 # Parameter
 # ----------------------------------------------------------------------------------
 class Parameter(Variable): #파라미터를 담을 수 있게 하는 상자
     pass
-
-
 
 
 

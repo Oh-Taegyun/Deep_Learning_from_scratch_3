@@ -1,4 +1,5 @@
-﻿from Dezore.core import Variable
+﻿from Dezore.core import using_config
+from Dezore.core import Variable
 from Dezore.core import Function
 from Dezore.core import using_config
 from Dezore.core import no_grad
